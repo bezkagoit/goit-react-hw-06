@@ -2,10 +2,14 @@ import React from "react";
 import { ImPhone } from "react-icons/im";
 import { ImUser } from "react-icons/im";
 import css from "../Contact/Contact.module.css";
+import { useDispatch } from "react-redux";
+import { deleteContact } from "../../redux/contactsSlice";
 
-const Contact = ({ id, number, name, onDelete }) => {
+const Contact = ({ id, name, number }) => {
+  const dispatch = useDispatch(); // Отримуємо функцію dispatch з Redux
+
   const handleDelete = () => {
-    onDelete(id);
+    dispatch(deleteContact(id)); // Викликаємо Redux action deleteContact з переданим id контакту
   };
   return (
     <li className={css.contactItem}>

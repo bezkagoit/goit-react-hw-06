@@ -2,28 +2,38 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
 import * as Yup from "yup";
 import css from "./ContactForm.module.css";
+import { useDispatch } from "react-redux";
+import { addContact } from "../../redux/contactsSlice";
+import { nanoid } from "nanoid";
 
-const ContactForm = ({ onAddContact }) => {
-  const ContactSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(2, "User name must be at least 2 characters!")
-      .max(50, "User name must be less than 50 characters!")
-      .required("Name is required!"),
-    number: Yup.string()
-      .matches(/^\d{3}-\d{2}-\d{2}$/, {
-        message: "Enter correct phone number: 111-11-11",
-        excludeEmptyString: false,
-      })
-      .required("Email is required!"),
-  });
+const ContactSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(2, "User name must be at least 2 characters!")
+    .max(50, "User name must be less than 50 characters!")
+    .required("Name is required!"),
+  number: Yup.string()
+    .matches(/^\d{3}-\d{2}-\d{2}$/, {
+      message: "Enter correct phone number: 111-11-11",
+      excludeEmptyString: false,
+    })
+    .required("Phone number is required!"),
+});
 
-  const initialValues = {
-    name: "",
-    number: "",
-  };
+const initialValues = {
+  name: "",
+  number: "",
+};
 
-  const handleSubmit = (data, formActions) => {
-    onAddContact(data);
+const ContactForm = () => {
+  const dispatch = useDispatch();
+
+  const handleSubmit = (formData, formActions) => {
+    const newContact = {
+      ...formData,
+      id: nanoid(),
+    };
+
+    dispatch(addContact(newContact));
     formActions.resetForm();
   };
 
